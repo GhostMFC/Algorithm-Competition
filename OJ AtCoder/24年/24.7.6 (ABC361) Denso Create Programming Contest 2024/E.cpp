@@ -1,0 +1,106 @@
+#include <bits/stdc++.h>
+#include <bits/extc++.h>
+#define Mod 998244353
+#define Mod1 10000000000037
+#define ls node[x].lch
+#define rs node[x].rch
+#define inf 0x7fffffff
+#define inf1 1000000009
+#define llinf 0x7fffffffffffffff
+#define llinf1 1000000000000000009
+#define IOS ios::sync_with_stdio(false),cin.tie(NULL),cout.tie(NULL);
+#define F(a,b,c,d) for(int b=c;b<=d;b+=a)
+#define F2(a,b,c,d) for(int b=c;b>=d;b-=a)
+#define PRC(b,a) fixed<<setprecision(a)<<b
+#define Next(a,b) for(int a=head[b];a;a=edge[a].nxt)
+using namespace std;
+using namespace __gnu_cxx;//rope<T> x
+typedef pair<int,int> PII;
+typedef long long ll;
+typedef unsigned long long ull;
+template <typename T> inline void read(T &xx){
+  char cc=getchar();T ff=1; xx=0;
+  while(cc>'9'||cc<'0'){ ff=cc=='-'?-1:ff,cc=getchar();}
+  while(cc<='9'&&cc>='0'){ xx=(xx<<1)+(xx<<3)+(cc^48),cc=getchar();}
+  xx=xx*ff;
+}
+template <typename T> inline void write(T xx){
+  if(xx<0){ putchar('-'),xx=-xx;}
+  if(xx>9) write(xx/10);
+  putchar(xx%10+'0');
+}
+inline ll q_2(ll xx){return xx*xx;}
+inline ll lowbit(ll xx){return xx&(-xx);}
+inline ll Gcd(ll xx,ll yy){return yy?Gcd(yy,xx%yy):xx;}
+inline ll q_Mul(ll xx,ll yy,ll pp){ll oo=0;while(yy){if(yy&1)oo=(oo+xx)%pp;xx=(xx<<1)%pp;yy>>=1;}return oo;}
+inline ll q_Pow(ll xx,ll yy,ll pp){ll oo=1;for(;yy;yy>>=1,xx=xx*xx%pp)yy&1?oo=oo*xx%pp:0;return oo;}
+//q_Pow can conbine with q_Mul to avoid overflow
+template <typename T> inline T Min(T xx,T yy){return xx<yy?xx:yy;}
+template <typename T> inline T Max(T xx,T yy){return xx>yy?xx:yy;}//(XX-YY>>63)?.:.;
+template <typename T> inline void sMin(T &xx,T yy){xx=(xx<yy)?xx:yy;}
+template <typename T> inline void sMax(T &xx,T yy){xx=(xx>yy)?xx:yy;}
+
+template <typename T1,typename...T2>
+inline void read(T1 &x,T2& ...y){read(x);read(y...);}
+inline void Cout(){cout<<endl;}
+template <class T1,class...T2>
+inline void Cout(T1 x,T2 ...y){cout<<x<<' ';Cout(y...);}
+
+#define pb push_back
+#define All(x) x.begin(),x.end()
+
+int dx[4]={1,0,-1,0},dy[4]={0,1,0,-1};
+int d2x[8]={1,0,-1,0,1,-1,-1,1},d2y[8]={0,1,0,-1,1,1,-1,-1};
+
+const double PI=acos(-1),eps=1e-10;
+
+const int N=200010;
+
+int n,head[N],cnt;
+ll d[N],tote;
+struct Edge{
+  int fo,to,nxt; ll val;
+}edge[N<<1];
+inline void Add(int fo,int to,ll val){
+  edge[++cnt]={fo,to,head[fo],val};
+  head[fo]=cnt;
+}
+
+inline void dfs(int pos,int fa){
+  for(int i=head[pos];i;i=edge[i].nxt){
+    int &to=edge[i].to;
+    if(to^fa){
+      d[to]=d[pos]+edge[i].val;
+      dfs(to,pos);
+    }
+  }
+}
+
+inline void solve(){
+  dfs(1,0);
+  ll mx=0,pos=1;
+  for(int i=2;i<=n;++i)
+    if(mx<d[i]) pos=i,mx=d[i];
+  memset(d,0,sizeof(d));
+  dfs(pos,pos); mx=0;
+  for(int i=1;i<=n;++i)
+    sMax(mx,d[i]);
+  cout<<tote*2-mx<<'\n';
+}
+
+signed main(){
+  //freopen();
+  //freopen();
+  srand(time(0));
+  IOS
+  //int T;
+  cin>>n;
+  for(int i=1;i<n;++i){
+    int x,y,z;
+    cin>>x>>y>>z;
+    tote+=z;
+    Add(x,y,z),Add(y,x,z);
+  } solve();
+  
+  return 0;
+}
